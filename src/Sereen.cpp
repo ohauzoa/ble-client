@@ -38,7 +38,7 @@ int minValue[6]={0,20,0,0,0,80};
 int maxValue[6]={40,100,60,80,70,160};
 int dbounce=0;
 
-int testValue = 0;
+float testValue = 0;
 /* push button 13 2 15 */
 //#include <Arduino_GFX_Library.h>
 
@@ -109,11 +109,13 @@ void task_gui(void *pvParameters)
             }
         }else dbounce=0;
 
-        result=map(encoder.getCount(),0,100,minValue[chosenOne],maxValue[chosenOne]);
+        result=map(testValue,0,100,minValue[chosenOne],maxValue[chosenOne]);
+        //result=map(encoder.getCount(),0,100,minValue[chosenOne],maxValue[chosenOne]);
         //result=map(analogRead(14),0,4095,minValue[chosenOne],maxValue[chosenOne]);
         if(testValue<10)testValue=10;
         if(testValue>40)testValue=40;
         if(chosenOne==0) result=testValue;
+
         angle=map(result,minValue[chosenOne],maxValue[chosenOne],0,267);
     
 
@@ -127,6 +129,7 @@ void task_gui(void *pvParameters)
 
         if(chosenOne==5) img.drawFloat(result/10.00,2,120,114);
         else if(chosenOne==4) img.drawString(String(result*100),120,114);
+        else if(chosenOne==0) img.drawFloat(testValue,2,120,114);
         else img.drawString(String(result),120,114);
         //img.drawString(String(analogRead(22)), 30,10,2);
 
@@ -146,7 +149,7 @@ void task_gui(void *pvParameters)
 
         img.pushSprite(0, 0);
 
-        delay(10);
+        delay(100);
     }    
 }
 

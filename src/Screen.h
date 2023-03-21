@@ -3,7 +3,9 @@
 
 #include "Arduino.h"
 
-extern int testValue;
+extern float testValue;
+extern int chosenOne;
+
 void screen_Init();
 
 #endif // SCREEN_H

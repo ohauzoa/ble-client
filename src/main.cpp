@@ -79,9 +79,21 @@ static void notifyCallback(BLERemoteCharacteristic* pBLERemoteCharacteristic, ui
     //Serial.println(length);
     //Serial.print("data: ");
     s = (char*)pData;
-    testValue = s.toInt();
-//    Serial.println(testValue);  // 이게 데이터!
-    Serial.println((char*)pData);  // 이게 데이터!
+    if(s.charAt(0) == 'T'){
+        String val = s.substring(2, 7);
+        testValue = val.toFloat();
+        //Serial.println(val);  // 이게 데이터!
+        Serial.println("Rx T : " + String(testValue, 2));  // 이게 데이터!
+    }
+    else if(s.charAt(0) == 'C'){
+        String val = s.substring(2, 3);
+        chosenOne = val.toInt();
+        Serial.println("Rx C : " + String(chosenOne));
+    //testValue = s.toFloat();
+    //Serial.println((char*)pData);  // 이게 데이터!
+    }
+
+
 
 }
 
@@ -132,6 +144,7 @@ bool connectToServer() {
       pTxCharacteristic->registerForNotify(notifyCallback);
     }
 
+
     // Client 입장에서의 Tx 캐릭터리스틱 클래스 얻기
     pRxCharacteristic = pRemoteService->getCharacteristic(rxUUID);
     if (pRxCharacteristic == nullptr) {
@@ -156,12 +169,21 @@ bool connectToServer() {
 
 void click1() {
     //버튼 클릭
-    String newValue = "Button1Click";    
+    int val = 1;
+    String newValue = "B:" + String(val);
     //그대로 서버(Pheriphral)에 보냄.
     pRxCharacteristic->writeValue(newValue.c_str(), newValue.length());
 } // click1
 
 void click2() {
+    //버튼 클릭
+    int val = 2;
+    String newValue = "B:" + String(val);
+    //그대로 서버(Pheriphral)에 보냄.
+    pRxCharacteristic->writeValue(newValue.c_str(), newValue.length());
+} // click1
+
+void click3() {
     //버튼 클릭
     String newValue = "Button2Click";    
     //그대로 서버(Pheriphral)에 보냄.
@@ -246,7 +268,7 @@ void loop() {
         if (connected) {
             //부팅후 현재까지의 시간
             String newValue = "Time since boot: " + String(millis()/1000);    
-            Serial.println("Setting new characteristic value to \"" + newValue + "\"");    
+            //Serial.println("Setting new characteristic value to \"" + newValue + "\"");    
             //그대로 서버(Pheriphral)에 보냄.
             pRxCharacteristic->writeValue(newValue.c_str(), newValue.length());
         }
